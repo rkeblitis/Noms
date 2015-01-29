@@ -17,7 +17,7 @@ class FoursquareController < ApplicationController
       id_response.each do |pic_info|
         prefix = pic_info["prefix"]
         suffix = pic_info["suffix"]
-        photo_url = prefix + "original" + suffix
+        photo_url = prefix + "400x400" + suffix
         @pics << photo_url
       end
     end
