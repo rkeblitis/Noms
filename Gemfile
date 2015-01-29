@@ -35,8 +35,6 @@ group :development do
   gem "binding_of_caller"
 end
 
-
-
 gem 'httparty'
 
 gem 'dotenv-rails', :groups => [:development, :test]
