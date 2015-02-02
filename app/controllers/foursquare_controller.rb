@@ -21,7 +21,7 @@ class FoursquareController < ApplicationController
         @pics << photo_url
       end
     end
-    @pics
+    render json: @pics
   end
 
 end
