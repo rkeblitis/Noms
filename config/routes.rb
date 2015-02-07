@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
-  # Yelp Controller
+  # Foursquare Controller
   get "/foursquare" , to:"foursquare#get_venues"
+  post "/foursquare" , to:"foursquare#get_venues"
+
 
 
   # The priority is based upon order of creation: first created -> highest priority.
