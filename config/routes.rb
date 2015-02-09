@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
 
   # Foursquare Controller
-  get "/foursquare" , to:"foursquare#get_venues"
-  post "/foursquare" , to:"foursquare#get_venues"
+  get   "/foursquare"  , to:"foursquare#get_venues"
+  post  "/foursquare"  , to:"foursquare#get_venues"
+  get   "/pic"         , to:"foursquare#response"
+  post  "/pic"         , to:"foursquare#response"
 
 
 

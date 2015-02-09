@@ -80,6 +80,6 @@ test:
 #
 production:
   <<: *default
-  database: noms_production
-  username: noms
+  database: noms-api_production
+  username: ubuntu
   password: <%= ENV['NOMS_DATABASE_PASSWORD'] %>

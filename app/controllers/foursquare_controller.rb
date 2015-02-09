@@ -1,7 +1,7 @@
 class FoursquareController < ApplicationController
 
   def get_venues
-  
+
     @venues = []
     # return all the venues near me:
     @venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
@@ -53,5 +53,9 @@ class FoursquareController < ApplicationController
     end
 
   end
+
+  # def response
+  #   @venue
+  # end
 
 end
