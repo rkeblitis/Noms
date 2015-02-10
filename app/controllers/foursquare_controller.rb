@@ -43,24 +43,31 @@ class FoursquareController < ApplicationController
     @pic = @all_photos.flatten.sample
 
     render json: @pic
+
+    if params["reaction"] == "meh"
+      raise
+    elsif params["reaction"] == "nom"
+      raise
+    elsif params["reaction"] == "flag"
+      raise
+    end
   end
 
 # ------------------------------------------
 
   def get_venue_photos
-    # for each venue.id make api request for photos
-    @venues.each do |venue|
-      photo_response = HTTParty.get("https://api.foursquare.com/v2/venues/#{venue.foursquare_venue_id}/photos?&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")["response"]["photos"]["items"]
-      # for each photo response parse out photo url
-      photo_response.each do |pic_info|
-        prefix = pic_info["prefix"]
-        suffix = pic_info["suffix"]
-        photo_url = prefix + "400x400" + suffix
-        # create new Photo active record objects with current venue.id
-        Photo.create(url: photo_url, venue_id: venue.id)
-
+      # for each venue.id make api request for photos
+      @venues.each do |venue|
+        photo_response = HTTParty.get("https://api.foursquare.com/v2/venues/#{venue.foursquare_venue_id}/photos?&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")["response"]["photos"]["items"]
+        # for each photo response parse out photo url
+        photo_response.each do |pic_info|
+          prefix = pic_info["prefix"]
+          suffix = pic_info["suffix"]
+          photo_url = prefix + "400x400" + suffix
+          # create new Photo active record objects with current venue.id
+          Photo.create(url: photo_url, venue_id: venue.id)
+        end
       end
-    end
   end
 
 
