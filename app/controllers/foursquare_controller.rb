@@ -35,21 +35,31 @@ class FoursquareController < ApplicationController
         @venue_ids << venue_info["id"]
     end
     @all_photos = []
-    # photo obj's for each venue given current lat and lon:
+    # list of venue obj's for the given current lat and lon:
     @venue_photos = Venue.where(foursquare_venue_id: @venue_ids)
     @venue_photos.each do |venue|
-      @all_photos << venue.photos
+      # a list of photo obj's associated with a particular venue:
+      venue.photos.each do |photo_obj|
+        # if this photo's reaction obj has a reaction attribute == "flag"
+        if photo_obj.reaction == Reaction.where(reaction: "flag")
+          puts flag
+        else
+          @all_photos << photo_obj
+        end
+      end
     end
     @pic = @all_photos.flatten.sample
-
-    render json: @pic
+    # render json: @pic
 
     if params["reaction"] == "meh"
-      raise
+      render json: @pic
+
     elsif params["reaction"] == "nom"
       raise
     elsif params["reaction"] == "flag"
       raise
+    else
+      render json: @pic
     end
   end
 
