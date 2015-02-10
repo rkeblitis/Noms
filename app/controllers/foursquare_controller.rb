@@ -1,7 +1,6 @@
 class FoursquareController < ApplicationController
 
   def get_venues
-
     @venues = []
     # return all the venues near me:
     @venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
@@ -23,19 +22,30 @@ class FoursquareController < ApplicationController
         get_venue_photos
       end
     end
-    # query photo here:
-    # will get an array of just venue_id's
-    @venue_ids = @venues.map do |venue|
-      venue.id
+    query_photo
+  end
+
+#  ---------------------------------------
+
+  def query_photo
+    @venue_ids = []
+    # return all the venues near me:
+    @venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
+    @venue_response.parsed_response["response"]["venues"].each do |venue_info|
+        @venue_ids << venue_info["id"]
     end
-    # will return all photo obj where this is true, sample from here
-    @all_photos = Photo.where(venue_id: @venue_ids)
-    @pic = @all_photos.sample
-    # respond_to do |format|
-    #   format.json { }
+    @all_photos = []
+    # photo obj's for each venue given current lat and lon:
+    @venue_photos = Venue.where(foursquare_venue_id: @venue_ids)
+    @venue_photos.each do |venue|
+      @all_photos << venue.photos
+    end
+    @pic = @all_photos.flatten.sample
+
     render json: @pic
   end
 
+# ------------------------------------------
 
   def get_venue_photos
     # for each venue.id make api request for photos
@@ -51,11 +61,7 @@ class FoursquareController < ApplicationController
 
       end
     end
-
   end
 
-  # def response
-  #   @venue
-  # end
 
 end
