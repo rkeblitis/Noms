@@ -1,8 +1,6 @@
 class FoursquareController < ApplicationController
   before_action :get_venues
 
-      # redirect_to new_login_url
-
 
   # def get_venues
     # session[:user_id] = "1"
@@ -63,7 +61,7 @@ class FoursquareController < ApplicationController
 
 # ------------------------------------------
 
-  def save_pictures
+  def query_pictures
       # for each venue.id make api request for photos
       @venues.each do |venue|
         photo_response = HTTParty.get("https://api.foursquare.com/v2/venues/#{venue.foursquare_venue_id}/photos?&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")["response"]["photos"]["items"]
@@ -82,7 +80,7 @@ class FoursquareController < ApplicationController
   private
 
   def get_venues
-    # session[:user_id] = "1"
+    session[:user_id] = "1"
     # puts session[:user_id].inspect
     @venues = []
     # return all the venues near me:
@@ -102,6 +100,7 @@ class FoursquareController < ApplicationController
         )
         # add Venues objects to []
         @venues << venue
+        query_pictures
       end
     end
   end
