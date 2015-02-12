@@ -31,8 +31,29 @@ class FoursquareController < ApplicationController
 
 #  ---------------------------------------
 
+  def done
+    # @categories = Hash.new
+    @count = Hash.new
+    @results = []
+    nom_reactions = Reaction.where(reaction: "nom")
+    nom_reactions.each do |reaction|
+      if @count.key?(reaction.photo.venue.category)
+          @count[reaction.photo.venue.category] += 1
+      else
+        @count[reaction.photo.venue.category] = 1
+      end
+    end
+    @count.each do |k ,v|
+      if v == 4
+        @results << Venue.where(category: k)
+      end
+    end
+    render json: @results
+  end
+
+
   def get_picture
-    render json: @venues.sample.photos.sample
+      render json: @venues.sample.photos.sample
 
     # list of venue obj's for the given current lat and lon:
     # @venue_photos = Venue.where(foursquare_venue_id: @venue_ids)
