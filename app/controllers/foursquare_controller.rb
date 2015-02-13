@@ -33,6 +33,7 @@ class FoursquareController < ApplicationController
 #  ---------------------------------------
 
   def done
+
     # @categories = Hash.new
     @count = Hash.new
     @results = []
@@ -45,7 +46,7 @@ class FoursquareController < ApplicationController
       end
     end
     @count.each do |k ,v|
-      if v == 4
+      if v == 5000
         result_venues = Venue.where(category: k)
         result_venues.each do |venue|
           result = venue.name, venue.address, venue.phone_number, venue.category
@@ -106,7 +107,12 @@ class FoursquareController < ApplicationController
   private
 
   def get_venues
-    session[:user_id] = "1"
+    if session[:user_id] == nil
+      current_user_id = SecureRandom.base64
+      session[:user_id] = current_user_id
+    else
+      session[:user_id] = session[:user_id]
+    end
     # puts session[:user_id].inspect
     @venues = []
     # return all the venues near me:
