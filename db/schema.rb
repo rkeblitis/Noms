@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 20150210184220) do
   end
 
   create_table "reactions", force: true do |t|
-    t.integer  "user_id"
+    t.string   "user_id"
     t.string   "reaction"
     t.integer  "photo_id"
     t.datetime "created_at"

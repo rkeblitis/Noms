@@ -46,7 +46,7 @@ class FoursquareController < ApplicationController
       end
     end
     @count.each do |k ,v|
-      if v == 5000
+      if v == 4
         result_venues = Venue.where(category: k)
         result_venues.each do |venue|
           result = venue.name, venue.address, venue.phone_number, venue.category
@@ -59,7 +59,11 @@ class FoursquareController < ApplicationController
 
 
   def get_picture
-      render json: @venues.sample.photos.sample
+    # returns a photo, from a venue, that has no reaction from a particular user
+      render json: @venues.sample.photos.find_no_reaction(session[:user_id]).sample
+    # Photo.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', "9kwG0XQdwkzixwQEolELC").find(14332)
+
+
 
     # list of venue obj's for the given current lat and lon:
     # @venue_photos = Venue.where(foursquare_venue_id: @venue_ids)
