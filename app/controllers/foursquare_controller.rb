@@ -2,6 +2,7 @@ class FoursquareController < ApplicationController
   before_action :get_venues
 
 
+
   # def get_venues
     # session[:user_id] = "1"
     # puts session[:user_id].inspect
@@ -45,7 +46,11 @@ class FoursquareController < ApplicationController
     end
     @count.each do |k ,v|
       if v == 4
-        @results << Venue.where(category: k)
+        result_venues = Venue.where(category: k)
+        result_venues.each do |venue|
+          result = venue.name, venue.address, venue.phone_number, venue.category
+          @results << result
+      end
       end
     end
     render json: @results
