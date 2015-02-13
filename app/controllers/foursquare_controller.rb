@@ -1,39 +1,8 @@
 class FoursquareController < ApplicationController
   before_action :get_venues
-
-
-
-  # def get_venues
-    # session[:user_id] = "1"
-    # puts session[:user_id].inspect
-    # @venues = []
-    # # return all the venues near me:
-    # @venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
-    # @venue_response.parsed_response["response"]["venues"].each do |venue_info|
-    #   if Venue.exists?(foursquare_venue_id: venue_info["id"])
-    #     @venues << Venue.find_by(foursquare_venue_id: venue_info["id"])
-    #     # ***** I need to add && Venue.where(updated_at: = < 24 hours ) or something like that *****
-    #   else
-    #     # create new Venue active record objects
-    #     venue = Venue.create(
-    #     foursquare_venue_id:  venue_info["id"],
-    #     name:                 venue_info["name"],
-    #     phone_number:         venue_info["contact"]["formattedPhone"],
-    #     address:              venue_info["location"]["formattedAddress"].join(" "),
-    #     category:             venue_info["categories"][0]["name"]
-    #     )
-    #     # add Venues objects to []
-    #     @venues << venue
-  #       get_venue_photos
-  #     end
-  #   end
-  #   query_photo
-  # # end
-
-#  ---------------------------------------
+  before_action :set_session
 
   def done
-
     # @categories = Hash.new
     @count = Hash.new
     @results = []
@@ -57,40 +26,11 @@ class FoursquareController < ApplicationController
     render json: @results
   end
 
-
   def get_picture
-    # returns a photo, from a venue, that has no reaction from a particular user
+    # returns a photo, from a venue, that has no reaction from a particular user:
       render json: @venues.sample.photos.find_no_reaction(session[:user_id]).sample
-    # Photo.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', "9kwG0XQdwkzixwQEolELC").find(14332)
-
-
-
-    # list of venue obj's for the given current lat and lon:
-    # @venue_photos = Venue.where(foursquare_venue_id: @venue_ids)
-    # @venue_photos.each do |venue|
-    #   # a list of photo obj's associated with a particular venue:
-    #   venue.photos.each do |photo_obj|
-    #     # if this photo's reaction obj has a reaction attribute == "flag"
-    #     if photo_obj.reaction == Reaction.where(reaction: "flag")
-    #       puts flag
-    #     else
-    #       @all_photos << photo_obj
-    #     end
-    #   end
-    # end
-    # @pic = @all_photos.flatten.sample
-    # render json: @pic
-
-    # if params[:reaction] == "meh"
-    #   Reaction.create(photo_id: params[:pic_obj[:id]], reaction: params[:reaction], user_id: session[:user_id])
-    # elsif params[:reaction] == "nom"
-    #   Reaction.create(photo_id: params[:pic_obj[:id]], reaction: params[:reaction], user_id: session[:user_id])
-    # elsif params[:reaction] == "flag"
-    #   Reaction.create(photo_id: params[:pic_obj[:id]], reaction: params[:reaction], user_id: session[:user_id])
-    # end
+    # Photo.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', session[:user_id])
   end
-
-# ------------------------------------------
 
   def query_pictures
       # for each venue.id make api request for photos
@@ -107,17 +47,20 @@ class FoursquareController < ApplicationController
       end
 
   end
-# -------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------------------------------------
   private
 
-  def get_venues
+  def set_session
     if session[:user_id] == nil
       current_user_id = SecureRandom.base64
       session[:user_id] = current_user_id
     else
       session[:user_id] = session[:user_id]
     end
-    # puts session[:user_id].inspect
+
+  end
+
+  def get_venues
     @venues = []
     # return all the venues near me:
     @venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
