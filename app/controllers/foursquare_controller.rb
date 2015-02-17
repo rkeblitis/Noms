@@ -3,10 +3,11 @@ class FoursquareController < ApplicationController
   before_action :set_session
 
   def done
-    # @categories = Hash.new
     @count = Hash.new
     @results = []
     nom_reactions = Reaction.where(reaction: "nom")
+    # Reaction.where('(SELECT Count(*) FROM reactions WHERE reactions.reaction = "nom" AND reactions.created_by = ?) = *', )
+    # and created_by is < 15 mins old
     nom_reactions.each do |reaction|
       if @count.key?(reaction.photo.venue.category)
           @count[reaction.photo.venue.category] += 1
@@ -15,7 +16,7 @@ class FoursquareController < ApplicationController
       end
     end
     @count.each do |k ,v|
-      if v == 4
+      if v == 400
         result_venues = Venue.where(category: k)
         result_venues.each do |venue|
           result = venue.name, venue.address, venue.phone_number, venue.category
@@ -28,7 +29,8 @@ class FoursquareController < ApplicationController
 
   def get_picture
     # returns a photo, from a venue, that has no reaction from a particular user:
-      render json: @venues.sample.photos.find_no_reaction(session[:user_id]).sample
+      photo = Venue.get_picture(@venues, session[:user_id])
+      render json: photo
     # Photo.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', session[:user_id])
   end
 
@@ -42,7 +44,11 @@ class FoursquareController < ApplicationController
           suffix = pic_info["suffix"]
           photo_url = prefix + "400x400" + suffix
           # create new Photo active record objects with current venue.id
-          Photo.create(url: photo_url, venue_id: venue.id)
+          if Photo.exists?(url: photo_url)
+            photo_url = "http://assets.atlasobscura.com/media/BAhbCVsHOgZmSSJGdXBsb2Fkcy9wbGFjZV9pbWFnZXMvYzI3OGVkNjRiOTVhYzNlNjBhZTkxOTdhNzZlZDI2Y2U0MTRhNzQzOS5qcGcGOgZFVFsIOgZwOgp0aHVtYkkiCjYwMHg+BjsGVFsHOwc6CnN0cmlwWwk7BzoMY29udmVydEkiEC1xdWFsaXR5IDkxBjsGVDA/image.jpg"
+          else
+            Photo.create(url: photo_url, venue_id: venue.id)
+          end
         end
       end
 
@@ -56,6 +62,7 @@ class FoursquareController < ApplicationController
       session[:user_id] = current_user_id
     else
       session[:user_id] = session[:user_id]
+
     end
 
   end

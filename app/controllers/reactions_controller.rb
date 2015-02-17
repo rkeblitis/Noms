@@ -11,7 +11,7 @@ class ReactionsController < ApplicationController
     elsif params[:reaction] == "flag"
       Reaction.create(photo_id: params[:pic_id], reaction: params[:reaction], user_id: session[:user_id])
     end
-    
+    puts Reaction.count
     render json: []
   end
 
