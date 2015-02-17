@@ -1,11 +1,16 @@
+require 'time'
 class FoursquareController < ApplicationController
   before_action :get_venues
   before_action :set_session
+  before_action :set_time
 
   def done
     @count = Hash.new
     @results = []
-    nom_reactions = Reaction.where(reaction: "nom")
+    current_time = session[:current_time]
+    # 900 sec == 15 mins
+    time_range = current_time + (900)
+    nom_reactions = Reaction.where(reaction: "nom", created_at: current_time.. time_range, user_id: session[:user_id])
     # Reaction.where('(SELECT Count(*) FROM reactions WHERE reactions.reaction = "nom" AND reactions.created_by = ?) = *', )
     # and created_by is < 15 mins old
     nom_reactions.each do |reaction|
@@ -16,7 +21,7 @@ class FoursquareController < ApplicationController
       end
     end
     @count.each do |k ,v|
-      if v == 400
+      if v == 3
         result_venues = Venue.where(category: k)
         result_venues.each do |venue|
           result = venue.name, venue.address, venue.phone_number, venue.category
@@ -42,7 +47,7 @@ class FoursquareController < ApplicationController
         photo_response.each do |pic_info|
           prefix = pic_info["prefix"]
           suffix = pic_info["suffix"]
-          photo_url = prefix + "400x400" + suffix
+          photo_url = prefix + "600x600" + suffix
           # create new Photo active record objects with current venue.id
           if Photo.exists?(url: photo_url)
             photo_url = "http://assets.atlasobscura.com/media/BAhbCVsHOgZmSSJGdXBsb2Fkcy9wbGFjZV9pbWFnZXMvYzI3OGVkNjRiOTVhYzNlNjBhZTkxOTdhNzZlZDI2Y2U0MTRhNzQzOS5qcGcGOgZFVFsIOgZwOgp0aHVtYkkiCjYwMHg+BjsGVFsHOwc6CnN0cmlwWwk7BzoMY29udmVydEkiEC1xdWFsaXR5IDkxBjsGVDA/image.jpg"
@@ -55,6 +60,19 @@ class FoursquareController < ApplicationController
   end
 # -------------------------------------------------------------------------------------------------------------------
   private
+
+  def set_time
+    if session[:current_time] == nil
+      session[:current_time] = Time.now
+    else
+      if
+      session[:current_time] < 2.minutes.ago
+        session[:current_time] = Time.now
+      else
+        session[:current_time] = Time.parse(session[:current_time])
+      end
+    end
+  end
 
   def set_session
     if session[:user_id] == nil
