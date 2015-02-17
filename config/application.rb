@@ -29,7 +29,7 @@ module Noms
 
     config.middleware.insert_before 0, "Rack::Cors" do
       allow do
-        origins 'http://localhost:8080', 'http://54.69.127.85'
+        origins 'http://localhost:8080', 'http://54.69.127.85', 'hangrynoms.com'
         # http://54.69.127.85
         resource '*', :headers => :any, :methods => [:get, :post, :options]
       end

@@ -6,4 +6,8 @@ class Photo < ActiveRecord::Base
     self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', user_id.to_s)
   end
 
+  # def self.find_flag
+  #   self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', user_id.to_s)
+  # end
+
 end

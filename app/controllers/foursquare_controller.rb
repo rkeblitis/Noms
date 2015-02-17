@@ -22,7 +22,7 @@ class FoursquareController < ApplicationController
     end
     @count.each do |k ,v|
       if v == 3
-        result_venues = Venue.where(category: k)
+        result_venues = Venue.where(id: @venues, category: k)
         result_venues.each do |venue|
           result = venue.name, venue.address, venue.phone_number, venue.category
           @results << result
@@ -66,7 +66,7 @@ class FoursquareController < ApplicationController
       session[:current_time] = Time.now
     else
       if
-      session[:current_time] < 2.minutes.ago
+      session[:current_time] < 5.minutes.ago
         session[:current_time] = Time.now
       else
         session[:current_time] = Time.parse(session[:current_time])
