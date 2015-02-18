@@ -7,8 +7,10 @@ Rails.application.routes.draw do
   post  "/picture"         , to:"foursquare#get_picture"
   get   "/reaction"        , to:"reactions#save_reaction"
   post  "/reaction"        , to:"reactions#save_reaction"
-  get   "/done"            , to:"foursquare#done"
-  post  "/done"            , to:"foursquare#done"
+  get   "/results"         , to:"reactions#results"
+  post  "/results"         , to:"reactions#results"
+  get   "/info"            , to:"foursquare#info"
+  post  "/info"            , to:"foursquare#info"
 
 
 
