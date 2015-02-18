@@ -5,7 +5,7 @@ class FoursquareController < ApplicationController
 
   def get_picture
     photo = Venue.get_picture(@venues, session[:user_id])
-    if photo == nil
+    while photo == nil
       photo = Venue.get_picture(@venues, session[:user_id])
       # {url: "http://img.4plebs.org/boards/tg/image/1401/25/1401256143635.jpg"}
     end
@@ -15,21 +15,6 @@ class FoursquareController < ApplicationController
   # def info
   #
   # end
-
-  def query_pictures
-    @venues.each do |venue|
-      photo_response = HTTParty.get("https://api.foursquare.com/v2/venues/#{venue.foursquare_venue_id}/photos?&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")["response"]["photos"]["items"]
-      photo_response.each do |pic_info|
-        prefix = pic_info["prefix"]
-        suffix = pic_info["suffix"]
-        photo_url = prefix + "600x600" + suffix
-        if Photo.exists?(url: photo_url)
-          photo_url = "http://assets.atlasobscura.com/media/BAhbCVsHOgZmSSJGdXBsb2Fkcy9wbGFjZV9pbWFnZXMvYzI3OGVkNjRiOTVhYzNlNjBhZTkxOTdhNzZlZDI2Y2U0MTRhNzQzOS5qcGcGOgZFVFsIOgZwOgp0aHVtYkkiCjYwMHg+BjsGVFsHOwc6CnN0cmlwWwk7BzoMY29udmVydEkiEC1xdWFsaXR5IDkxBjsGVDA/image.jpg"
-        else
-          Photo.create(url: photo_url, venue_id: venue.id)
-        end
-      end
-    end
 
   end
 # -------------------------------------------------------------------------------------------------------------------
@@ -56,5 +41,20 @@ class FoursquareController < ApplicationController
       end
     end
   end
+
+  def query_pictures
+    @venues.each do |venue|
+      photo_response = HTTParty.get("https://api.foursquare.com/v2/venues/#{venue.foursquare_venue_id}/photos?&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")["response"]["photos"]["items"]
+      photo_response.each do |pic_info|
+        prefix = pic_info["prefix"]
+        suffix = pic_info["suffix"]
+        photo_url = prefix + "600x600" + suffix
+        if Photo.exists?(url: photo_url)
+          photo_url = "http://assets.atlasobscura.com/media/BAhbCVsHOgZmSSJGdXBsb2Fkcy9wbGFjZV9pbWFnZXMvYzI3OGVkNjRiOTVhYzNlNjBhZTkxOTdhNzZlZDI2Y2U0MTRhNzQzOS5qcGcGOgZFVFsIOgZwOgp0aHVtYkkiCjYwMHg+BjsGVFsHOwc6CnN0cmlwWwk7BzoMY29udmVydEkiEC1xdWFsaXR5IDkxBjsGVDA/image.jpg"
+        else
+          Photo.create(url: photo_url, venue_id: venue.id)
+        end
+      end
+    end
 
 end
