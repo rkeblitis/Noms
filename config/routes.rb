@@ -5,12 +5,15 @@ Rails.application.routes.draw do
   post  "/foursquare"      , to:"foursquare#get_venues"
   get   "/picture"         , to:"foursquare#get_picture"
   post  "/picture"         , to:"foursquare#get_picture"
+  get   "/info"            , to:"foursquare#info"
+  post  "/info"            , to:"foursquare#info"
+
+  # Reactions Controller
   get   "/reaction"        , to:"reactions#save_reaction"
   post  "/reaction"        , to:"reactions#save_reaction"
   get   "/results"         , to:"reactions#results"
   post  "/results"         , to:"reactions#results"
-  get   "/info"            , to:"foursquare#info"
-  post  "/info"            , to:"foursquare#info"
+
 
 
 
