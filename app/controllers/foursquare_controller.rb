@@ -22,7 +22,7 @@ class FoursquareController < ApplicationController
     end
     @count.each do |k ,v|
       if v == 3
-        result_venues = Venue.where(id: @venues, category: k)
+        result_venues = Venue.where(category: k)
         result_venues.each do |venue|
           result = venue.name, venue.address, venue.phone_number, venue.category
           @results << result
@@ -35,6 +35,9 @@ class FoursquareController < ApplicationController
   def get_picture
     # returns a photo, from a venue, that has no reaction from a particular user:
       photo = Venue.get_picture(@venues, session[:user_id])
+      if photo == nil
+        photo = {url: "http://img.4plebs.org/boards/tg/image/1401/25/1401256143635.jpg"}
+      end
       render json: photo
     # Photo.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', session[:user_id])
   end
