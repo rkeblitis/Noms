@@ -9,13 +9,8 @@ class ApplicationController < ActionController::Base
   def set_session_time
     if session[:current_time] == nil
       session[:current_time] = Time.now
-    else
-      if
-        session[:current_time] < 5.minutes.ago
-        session[:current_time] = Time.now
-      else
-        session[:current_time] = Time.parse(session[:current_time])
-      end
+    # else
+    #   session[:current_time] = Time.parse(session[:current_time])
     end
   end
 
