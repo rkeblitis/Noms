@@ -38,6 +38,6 @@ class FoursquareController < ApplicationController
     end
   end
 
-
+#  save lat and long as an attribute in the venues
 
 end
