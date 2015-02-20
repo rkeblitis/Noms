@@ -30,7 +30,9 @@ class FoursquareController < ApplicationController
       name:                 venue_info["name"],
       phone_number:         venue_info["contact"]["formattedPhone"],
       address:              venue_info["location"]["formattedAddress"].join(" "),
-      category:             venue_info["categories"][0]["name"]
+      category:             venue_info["categories"][0]["name"],
+      lat:                  params[:lat].to_f,
+      lon:                  params[:lon].to_f
       )
       # add Venues objects to []
       @venues << venue

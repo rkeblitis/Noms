@@ -30,10 +30,3 @@ class ApplicationController < ActionController::Base
   end
 
 end
-
-
-
-# migration
-# add lt lonto ven uemod
-# add to session
-# query to get venues near lat lonbetween clauses where lat between two

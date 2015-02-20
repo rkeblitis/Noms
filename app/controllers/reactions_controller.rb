@@ -13,7 +13,7 @@ class ReactionsController < ApplicationController
   end
 
   def results
-    results = Reaction.check_if_done(session[:user_id])
+    results = Reaction.check_if_done(session[:user_id], params[:lat].to_f, params[:lon].to_f)
     render json: results
   end
 

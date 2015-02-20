@@ -1,6 +1,13 @@
 class Venue < ActiveRecord::Base
   has_many :photos
 
+
+  acts_as_mappable :default_units => :miles,
+  :default_formula => :sphere,
+  :distance_field_name => :distance,
+  :lat_column_name => :lat,
+  :lng_column_name => :lon
+
   def self.get_picture(venues,user_id)
     venue_ids = venues.map do |venue|
       venue.id
