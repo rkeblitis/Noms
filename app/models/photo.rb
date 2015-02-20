@@ -5,7 +5,12 @@ class Photo < ActiveRecord::Base
   def self.find_no_reaction(user_id)
     # returns a photo, from a venue, that has no reaction from a particular user:
     # the count(*) selcts where the values is NOT there
-    self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ? AND reactions.created_at > ?) = 0', user_id.to_s, 15.minutes.ago)
+    # reactions.where('user_id = ?', user_id.to_s).where('reaction.created_at > ?', 15.minutes.ago)
+    self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ? AND reactions.created_at > ?) = 0', user_id.to_s, 15.minutes.ago)go
+  end
+
+  def flag_test
+    reactions.where(reaction: 'flag').count > 2
   end
 
   # def self.find_flag

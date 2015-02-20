@@ -14,13 +14,13 @@ class FoursquareController < ApplicationController
   end
 
   end
-# -------------------------------------------------------------------------------------------------------------------
+
   private
 
   def get_venues
     @venues = []
-    @venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
-    @venue_response.parsed_response["response"]["venues"].each do |venue_info|
+    venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
+    venue_response.parsed_response["response"]["venues"].each do |venue_info|
     if Venue.exists?(foursquare_venue_id: venue_info["id"])
       @venues << Venue.find_by(foursquare_venue_id: venue_info["id"])
       # ***** I need to add && Venue.where(updated_at: = < 24 hours ) or something like that *****
@@ -38,6 +38,5 @@ class FoursquareController < ApplicationController
     end
   end
 
-#  save lat and long as an attribute in the venues
 
 end
