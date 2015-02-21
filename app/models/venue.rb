@@ -8,12 +8,12 @@ class Venue < ActiveRecord::Base
   :lat_column_name => :lat,
   :lng_column_name => :lon
 
-  def self.get_picture(venues,user_id)
+  def self.get_picture(venues,user_id, number)
     venue_ids = venues.map do |venue|
       venue.id
     end
-    photos = Photo.includes(:reactions).where(venue_id: venue_ids)
-    photos.find_unflagged.find_no_reaction(user_id).sample
+    photos = Photo.where(venue_id: venue_ids)
+    photos.find_unflagged.find_no_reaction(user_id).sample(number)
   end
 
   def query_pictures

@@ -3,7 +3,7 @@ class FoursquareController < ApplicationController
 
 
   def get_picture
-    photo = Venue.get_picture(@venues, session[:user_id])
+    photo = Venue.get_picture(@venues, session[:user_id], params[:number].to_i)
     render json: photo
   end
 
@@ -21,8 +21,8 @@ class FoursquareController < ApplicationController
     @venues = []
     venue_response = HTTParty.get("https://api.foursquare.com/v2/venues/search?ll=#{params[:lat]},#{params[:lon]}&radius=500&categoryId=4d4b7105d754a06374d81259&client_id=#{ENV["FOURSQUARE_CLIENT_ID"]}&client_secret=#{ENV["FOURSQUARE_CLIENT_SECRET"]}&v=20150126")
     venue_response.parsed_response["response"]["venues"].each do |venue_info|
-    if Venue.exists?(foursquare_venue_id: venue_info["id"])
-      @venues << Venue.find_by(foursquare_venue_id: venue_info["id"])
+    if venue = Venue.find_by(foursquare_venue_id: venue_info["id"])
+      @venues << venue
       # ***** I need to add && Venue.where(updated_at: = < 24 hours ) or something like that *****
     else
       venue = Venue.create(

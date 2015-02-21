@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150220004208) do
+ActiveRecord::Schema.define(version: 20150221194503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 20150220004208) do
     t.datetime "updated_at"
   end
 
+  add_index "photos", ["venue_id"], name: "index_photos_on_venue_id", using: :btree
+
   create_table "reactions", force: true do |t|
     t.string   "user_id"
     t.string   "reaction"
@@ -30,6 +32,10 @@ ActiveRecord::Schema.define(version: 20150220004208) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "reactions", ["created_at"], name: "index_reactions_on_created_at", using: :btree
+  add_index "reactions", ["photo_id"], name: "index_reactions_on_photo_id", using: :btree
+  add_index "reactions", ["user_id"], name: "index_reactions_on_user_id", using: :btree
 
   create_table "venues", force: true do |t|
     t.string   "foursquare_venue_id"
