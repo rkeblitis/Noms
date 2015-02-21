@@ -27,3 +27,6 @@ class Reaction < ActiveRecord::Base
     @results
   end
 end
+
+
+# expire session for user

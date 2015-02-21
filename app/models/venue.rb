@@ -12,8 +12,9 @@ class Venue < ActiveRecord::Base
     venue_ids = venues.map do |venue|
       venue.id
     end
-    photos = Photo.where(venue_id: venue_ids)
+    photos = Photo.includes(:reactions).where(venue_id: venue_ids)
     photos.find_no_reaction(user_id).sample
+    # photos.reject &:flagged?
   end
 
   def query_pictures

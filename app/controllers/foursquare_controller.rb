@@ -9,7 +9,7 @@ class FoursquareController < ApplicationController
 
   def info
     photo = Photo.find(params["photo_id"])
-    photo_info = [photo.venue.name, photo.venue.category, photo.venue.address, photo.venue.phone_number]
+    photo_info = {name: photo.venue.name, category: photo.venue.category, address: photo.venue.address, phone_number: photo.venue.phone_number}
     render json: photo_info
   end
 

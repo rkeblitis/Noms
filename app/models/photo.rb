@@ -9,9 +9,13 @@ class Photo < ActiveRecord::Base
     self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ? AND reactions.created_at > ?) = 0', user_id.to_s, 15.minutes.ago)
   end
 
-  def flag_test
-    reactions.where(reaction: 'flag').count > 2
-  end
+  # def flags
+  #   reactions.where(reaction: 'flag').count
+  # end
+  #
+  # def flagged?
+  #   flags >= 3
+  # end
 
   # def self.find_flag
   #   self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', user_id.to_s)
