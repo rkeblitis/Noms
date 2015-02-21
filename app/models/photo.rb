@@ -9,18 +9,8 @@ class Photo < ActiveRecord::Base
     self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ? AND reactions.created_at > ?) = 0', user_id.to_s, 15.minutes.ago)
   end
 
-  # def flags
-  #   reactions.where(reaction: 'flag').count
-  # end
-  #
-  # def flagged?
-  #   flags >= 3
-  # end
-
-  # def self.find_flag
-  #   self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.user_id = ?) = 0', user_id.to_s)
-  # end
+  def self.find_unflagged
+    self.where('(SELECT Count(*) FROM reactions WHERE reactions.photo_id = photos.id AND reactions.reaction = ?) < 3', "flag")
+  end
 
 end
-
-# needs to return photos where there is no reaction of flag and no reaction within the last 15mins from a user

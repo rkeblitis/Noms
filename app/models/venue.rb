@@ -13,8 +13,7 @@ class Venue < ActiveRecord::Base
       venue.id
     end
     photos = Photo.includes(:reactions).where(venue_id: venue_ids)
-    photos.find_no_reaction(user_id).sample
-    # photos.reject &:flagged?
+    photos.find_unflagged.find_no_reaction(user_id).sample
   end
 
   def query_pictures
