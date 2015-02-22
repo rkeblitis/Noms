@@ -46,8 +46,8 @@ ActiveRecord::Schema.define(version: 20150221194503) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "venue_pic"
-    t.integer  "lat"
-    t.integer  "lon"
+    t.float    "lat"
+    t.float    "lon"
   end
 
 end

@@ -29,5 +29,3 @@ class Venue < ActiveRecord::Base
   end
 
 end
-
-# add index for venue_id on photos and user_id

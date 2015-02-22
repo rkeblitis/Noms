@@ -16,12 +16,9 @@ class Reaction < ActiveRecord::Base
     end
     @count.each do |k ,v|
       if v >= 3
-        # find venues within the user's location that match category of k
-        result_venues = Venue.within(0.25, :origin => [lat, lon])
+        result_venues = Venue.within(0.2, :origin => [lat, lon]).where(category: k)
         result_venues.each do |venue|
-          if venue.category == k
             @results << {name: venue.name, address: venue.address, phone_number: venue.phone_number, category: venue.category}
-          end
         end
       end
     end
