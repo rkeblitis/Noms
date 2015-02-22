@@ -1,4 +1,5 @@
 class Reaction < ActiveRecord::Base
+  validates :photo_id, :user_id, :reaction, {presence: true}
   belongs_to :photo
   # belongs_to:user
 
@@ -14,12 +15,12 @@ class Reaction < ActiveRecord::Base
       end
     end
     @count.each do |k ,v|
-      if v == 3
+      if v >= 3
         # find venues within the user's location that match category of k
         result_venues = Venue.within(0.25, :origin => [lat, lon])
         result_venues.each do |venue|
           if venue.category == k
-            @results << [venue.name, venue.address, venue.phone_number, venue.category]
+            @results << {name: venue.name, address: venue.address, phone_number: venue.phone_number, category: venue.category}
           end
         end
       end
@@ -27,6 +28,3 @@ class Reaction < ActiveRecord::Base
     @results
   end
 end
-
-
-# expire session for user
