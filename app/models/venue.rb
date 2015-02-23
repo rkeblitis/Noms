@@ -21,7 +21,7 @@ class Venue < ActiveRecord::Base
     photo_response.each do |pic_info|
       prefix = pic_info["prefix"]
       suffix = pic_info["suffix"]
-      photo_url = prefix + "600x600" + suffix
+      photo_url = prefix + "500x500" + suffix
       unless Photo.exists?(url: photo_url)
         Photo.create(url: photo_url, venue_id: self.id)
       end

@@ -25,3 +25,6 @@ class Reaction < ActiveRecord::Base
     @results
   end
 end
+
+
+# store user last search in session
